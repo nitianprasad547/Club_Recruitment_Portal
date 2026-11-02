@@ -34,6 +34,10 @@ app.use(
   cors({
     origin(origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+      // Automatically permit any Vercel deployment (preview or production)
+      if (origin && (origin.endsWith(".vercel.app") || origin.includes("vercel.app"))) {
+        return callback(null, true);
+      }
       if (process.env.NODE_ENV !== "production") {
         try {
           const { protocol, hostname } = new URL(origin);
